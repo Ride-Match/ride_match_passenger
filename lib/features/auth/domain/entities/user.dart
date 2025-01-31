@@ -1,5 +1,3 @@
-import 'package:ride_match/features/auth/domain/contracts/i_auth.repository.dart';
-
 class User {
   String id;
   String firstName;
