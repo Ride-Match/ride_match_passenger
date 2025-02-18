@@ -5,9 +5,9 @@ class ButtonText extends StatelessWidget {
   final String text;
 
   const ButtonText({
-    Key? key,
+    super.key,
     required this.text,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class ButtonText extends StatelessWidget {
         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontSize: 6.w,
               fontWeight: FontWeight.w700,
-              color: Theme.of(context).colorScheme.background,
+              color: Theme.of(context).colorScheme.surface,
             ));
     ;
   }
