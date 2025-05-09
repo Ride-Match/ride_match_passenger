@@ -2,9 +2,6 @@ String? emailValidator(String? value) {
   if (value == null || value.isEmpty) {
     return 'Email is required';
   }
-  if (!RegExp(r'^[\w.-]+@uoi\.edu$').hasMatch(value)) {
-    return 'Please enter a valid email';
-  }
   if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
     return 'Please enter a valid email';
   }
@@ -17,6 +14,28 @@ String? textValidator(String? value) {
   }
   if (value.length < 5) {
     return 'Can\'t be less than 5 characters';
+  }
+  if (value.length > 15) {
+    return 'Can\'t be greater than 15 characters';
+  }
+  return null;
+}
+
+String? nameValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'This field is required';
+  }
+  if (value.contains(RegExp(r'[0-9]'))) {
+    return 'Can\'t contain numbers';
+  }
+  if (value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+    return 'Can\'t contain special characters';
+  }
+  if (value.contains(" ")) {
+    return 'Can\'t contain spaces';
+  }
+  if (value.length < 3) {
+    return 'Can\'t be less than 3 characters';
   }
   if (value.length > 15) {
     return 'Can\'t be greater than 15 characters';

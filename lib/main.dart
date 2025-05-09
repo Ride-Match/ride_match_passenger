@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:ride_match/config/networking/api_client.dart';
+import 'package:ride_match/config/injection/dependency_injection.dart';
 import 'package:ride_match/config/route/app_route.dart';
 import 'package:ride_match/config/theme/theme.dart';
 import 'package:ride_match/config/theme/theme_provider.dart';
-import 'package:ride_match/features/auth/data/data_sources/auth.service.dart';
-import 'package:ride_match/features/auth/data/repositories/auth.repository.dart';
-import 'package:ride_match/features/auth/domain/usecases/login_usecase.dart';
 import 'package:ride_match/features/auth/presentation/blocs/auth/auth_cubit.dart';
+import 'package:ride_match/features/auth/presentation/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:ride_match/features/auth/presentation/blocs/login/login_bloc.dart';
 import 'package:ride_match/features/auth/presentation/blocs/signup/signup_bloc.dart';
+import 'package:ride_match/features/auth/presentation/blocs/verify_otp/verify_otp_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await setupDependencyInjection();
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -30,25 +32,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(
-          create: (context) => ApiClient(),
-        ),
-        RepositoryProvider(
-            create: (context) => AuthRepository(
-                context.read<ApiClient>().getChopperService<AuthService>()))
-      ],
-      child: MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider(
-              create: (context) => LoginUsecase(context.read<AuthRepository>()))
-        ],
-        child: MultiBlocProvider(
+    return 
+        MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context) => LoginBloc()),
-            BlocProvider(create: (context) => AuthCubit(Unauthenticated())),
-            BlocProvider(create: (context) => SignupBloc())
+            BlocProvider(create: (context) => instance<LoginBloc>()),
+            BlocProvider(create: (context) => instance<SignupBloc>()),
+            BlocProvider(create: (context) => instance<AuthCubit>()),
+            BlocProvider(create: (context) => instance<VerifyOtpBloc>()),
+            BlocProvider(create: (context) => instance<ForgotPasswordBloc>())
           ],
           child: RepositoryProvider(
             create: (context) => AppRoute(context.read<AuthCubit>()),
@@ -63,8 +54,6 @@ class MyApp extends StatelessWidget {
               );
             }),
           ),
-        ),
-      ),
-    );
+        );
   }
 }

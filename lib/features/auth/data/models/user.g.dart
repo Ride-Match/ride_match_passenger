@@ -11,13 +11,18 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
-      profileUrl: json['profileUrl'] as String,
+      role: $enumDecode(_$UserRoleEnumMap, json['role']),
     );
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'id': instance.id,
       'firstName': instance.firstName,
       'lastName': instance.lastName,
-      'profileUrl': instance.profileUrl,
       'email': instance.email,
+      'role': _$UserRoleEnumMap[instance.role]!,
     };
+
+const _$UserRoleEnumMap = {
+  UserRole.driver: 'driver',
+  UserRole.passenger: 'passenger',
+};

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:ride_match/config/route/go_router_refresh_stream.dart';
 import 'package:ride_match/features/auth/presentation/blocs/auth/auth_cubit.dart';
 import 'package:ride_match/features/auth/presentation/pages/login_page.dart';
+import 'package:ride_match/features/auth/presentation/pages/otp_page.dart';
 import 'package:ride_match/features/auth/presentation/pages/signup_page.dart';
 import 'package:ride_match/features/auth/presentation/pages/splash_page.dart';
 import 'package:ride_match/features/trip/presentation/pages/map_page.dart';
@@ -42,6 +43,13 @@ class AppRoute {
           builder: (context, state) {
             return SplashPage();
           },
+        ),
+        GoRoute(
+          path: '/otp',
+          builder: (context, state) {
+            final email = state.uri.queryParameters['email'];
+            return OtpPage(email: email ?? '');
+          },
         )
       ],
       redirect: (context, state) {
@@ -53,10 +61,8 @@ class AppRoute {
         final authPages = [
           '/login',
           '/signup',
+          '/otp',
         ];
-
-        print(state.fullPath);
-        print(authCubit.state);
 
         if (authenticating && !loggingIn) return '/splash';
 

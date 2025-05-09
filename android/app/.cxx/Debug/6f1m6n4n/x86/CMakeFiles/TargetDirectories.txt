@@ -1,0 +1,2 @@
+/home/leul/projects/personal/ride_match_passenger/android/app/.cxx/Debug/6f1m6n4n/x86/CMakeFiles/edit_cache.dir
+/home/leul/projects/personal/ride_match_passenger/android/app/.cxx/Debug/6f1m6n4n/x86/CMakeFiles/rebuild_cache.dir

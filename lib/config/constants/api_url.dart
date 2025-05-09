@@ -1,5 +1,5 @@
 class ApiUri {
-  static const baseUri = "http://localhost:3000";
+  static const baseUri = "http://10.0.2.2:3009";
   static const auth = "auth";
   static const users = "users";
 }
