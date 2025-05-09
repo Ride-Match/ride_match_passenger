@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ride_match/core/utils/validators';
 import 'package:ride_match/core/widgets/button_text.dart';
+import 'package:ride_match/core/widgets/circular_progress.dart';
 import 'package:ride_match/core/widgets/custome_input.dart';
+import 'package:ride_match/features/auth/presentation/blocs/signup/signup_bloc.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -20,6 +22,8 @@ class _SignupPageState extends State<SignupPage> {
 
   final TextEditingController confirmPasswordController =
       TextEditingController();
+
+  final TextEditingController lastNameController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -65,9 +69,17 @@ class _SignupPageState extends State<SignupPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     CustomeTextField(
-                      hintText: "Username",
+                      hintText: "First Name",
                       controller: nameController,
-                      validator: textValidator,
+                      validator: nameValidator,
+                    ),
+                    SizedBox(
+                      height: 4.w,
+                    ),
+                    CustomeTextField(
+                      hintText: "Last Name",
+                      controller: lastNameController,
+                      validator: nameValidator,
                     ),
                     SizedBox(
                       height: 4.w,
@@ -153,12 +165,36 @@ class _SignupPageState extends State<SignupPage> {
                 height: 7.w,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    context.read<SignupBloc>().add(Signup(
+                      firstName: nameController.text,
+                      lastName: lastNameController.text,
+                      email: emailController.text,
+                      password: passwordController.text,
+                    ));
+                  }
+                },
                 style: ButtonStyle(
                   minimumSize: WidgetStateProperty.resolveWith(
                       (states) => Size(90.w, 13.w)),
                 ),
-                child: ButtonText(text: "Sign Up"),
+                child: BlocBuilder<SignupBloc, SignupState>(
+                  builder: (context, state) {
+                    return state is SigningUp
+                        ? CircularProgress()
+                        : state is SignupFailed
+                            ? const ButtonText(text: 'Error')
+                            : state is SignupSuccess
+                                ? TextButton(
+                                    onPressed: () {
+                                      GoRouter.of(context).go('/otp?email=${emailController.text}');
+                                    },
+                                    child:
+                                        const ButtonText(text: 'Tap to verify email'))
+                                : const ButtonText(text: 'Sign Up');
+                  },
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -170,10 +206,10 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                   TextButton(
                     style: ButtonStyle(
-                        padding: MaterialStateProperty.resolveWith((states) =>
+                        padding: WidgetStateProperty.resolveWith((states) =>
                             EdgeInsets.symmetric(
                                 horizontal: 0.w, vertical: 0.w)),
-                        minimumSize: MaterialStateProperty.resolveWith(
+                        minimumSize: WidgetStateProperty.resolveWith(
                             (states) => Size(0, 0))),
                     onPressed: () => {GoRouter.of(context).go('/login')},
                     child: Text(

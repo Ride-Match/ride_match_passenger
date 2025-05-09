@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:ride_match/core/utils/validators';
 import 'package:ride_match/core/widgets/button_text.dart';
+import 'package:ride_match/core/widgets/circular_progress.dart';
 import 'package:ride_match/core/widgets/custome_input.dart';
 import 'package:ride_match/features/auth/presentation/blocs/auth/auth_cubit.dart';
+import 'package:ride_match/features/auth/presentation/blocs/login/login_bloc.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -84,13 +86,35 @@ class _LoginPageState extends State<LoginPage> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  context.read<AuthCubit>().authenticat(Authenticated());
+                  if (_formKey.currentState!.validate()) {
+                    context.read<LoginBloc>().add(
+                          Login(
+                            email: emailController.text,
+                            password: passwordController.text,
+                          ),
+                        );
+                  }
                 },
                 style: ButtonStyle(
                   minimumSize: WidgetStateProperty.resolveWith(
                       (states) => Size(90.w, 13.w)),
                 ),
-                child: ButtonText(text: "Log In"),
+                child: BlocBuilder<LoginBloc, LoginState>(
+                  builder: (context, state) {
+                    return state is LoggingIn
+                        ? CircularProgress()
+                        : state is LoginFailed
+                            ? const ButtonText(text: 'Error')
+                            : state is LoginSuccess
+                                ? TextButton(
+                                    onPressed: () {
+                                      GoRouter.of(context).go('/');
+                                    },
+                                    child:
+                                        const ButtonText(text: 'Success! Tap'))
+                                : const ButtonText(text: 'Log In');
+                  },
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

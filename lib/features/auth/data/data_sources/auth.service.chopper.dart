@@ -19,8 +19,8 @@ final class _$AuthService extends AuthService {
   final Type definitionType = AuthService;
 
   @override
-  Future<Map<String, String>> login(Map<String, String> body) async {
-    final Uri $url = Uri.parse('auth/login');
+  Future<Map<String, dynamic>> login(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/sign-in');
     final $body = body;
     final Request $request = Request(
       'POST',
@@ -29,7 +29,97 @@ final class _$AuthService extends AuthService {
       body: $body,
     );
     final Response $response =
-        await client.send<Map<String, String>, Map<String, String>>($request);
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> register(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/sign-up');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> logout(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/logout');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> refreshToken(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/refresh-tokens');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> forgotPassword(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/forgot-password');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> resetPassword(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/change-password');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
+    return $response.bodyOrThrow;
+  }
+
+  @override
+  Future<Map<String, dynamic>> verifyEmail(Map<String, dynamic> body) async {
+    final Uri $url = Uri.parse('auth/verify');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    final Response $response =
+        await client.send<Map<String, dynamic>, Map<String, dynamic>>($request);
     return $response.bodyOrThrow;
   }
 }
